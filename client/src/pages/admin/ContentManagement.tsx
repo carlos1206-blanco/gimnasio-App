@@ -42,7 +42,7 @@ export default function ContentManagement() {
   return (
     <div>
       <h1>Publicar contenido</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxWidth: 480 }}>
+      <form onSubmit={handleSubmit} className="form card" style={{ maxWidth: 480 }}>
         <label>
           Tipo
           <select
@@ -81,21 +81,24 @@ export default function ContentManagement() {
             placeholder="https://..."
           />
         </label>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-text">{error}</p>}
         <button type="submit" disabled={submitting}>
           {submitting ? "Publicando..." : "Publicar"}
         </button>
       </form>
 
       <h2 style={{ marginTop: "2rem" }}>Publicado recientemente</h2>
-      <ul>
+      <div className="stack" style={{ gap: "0.5rem" }}>
         {posts.map((p) => (
-          <li key={p.id}>
-            <strong>[{p.tipo}]</strong> {p.titulo} —{" "}
-            {new Date(p.fechaPublicacion).toLocaleString()}
-          </li>
+          <div key={p.id} className="card" style={{ padding: "0.75rem 1rem" }}>
+            <span className="badge badge-primary">{p.tipo}</span>{" "}
+            <strong>{p.titulo}</strong>{" "}
+            <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
+              — {new Date(p.fechaPublicacion).toLocaleString()}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

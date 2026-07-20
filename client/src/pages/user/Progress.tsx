@@ -59,105 +59,102 @@ export default function Progress() {
   if (loading) return <p>Cargando tu progreso...</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem", maxWidth: 640 }}>
+    <div className="stack" style={{ maxWidth: 640 }}>
       <h1>Mis logros y progreso</h1>
 
-      <section>
+      <section className="card">
         <h2>Registrar progreso</h2>
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
-          <label>
+        <form onSubmit={handleSubmit} className="form-row">
+          <label style={{ margin: 0 }}>
             Peso (kg)
             <input
               type="number"
               step="0.1"
               value={form.peso}
               onChange={(e) => setForm((f) => ({ ...f, peso: e.target.value }))}
-              style={{ width: "5rem", display: "block" }}
+              style={{ width: "5.5rem" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Cintura (cm)
             <input
               type="number"
               value={form.cintura}
               onChange={(e) => setForm((f) => ({ ...f, cintura: e.target.value }))}
-              style={{ width: "5rem", display: "block" }}
+              style={{ width: "5.5rem" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Pecho (cm)
             <input
               type="number"
               value={form.pecho}
               onChange={(e) => setForm((f) => ({ ...f, pecho: e.target.value }))}
-              style={{ width: "5rem", display: "block" }}
+              style={{ width: "5.5rem" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Brazo (cm)
             <input
               type="number"
               value={form.brazo}
               onChange={(e) => setForm((f) => ({ ...f, brazo: e.target.value }))}
-              style={{ width: "5rem", display: "block" }}
+              style={{ width: "5.5rem" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Marca personal
             <input
               placeholder="Ej: Sentadilla 100kg"
               value={form.marcaPersonal}
               onChange={(e) => setForm((f) => ({ ...f, marcaPersonal: e.target.value }))}
-              style={{ display: "block" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Foto (opcional)
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFoto(e.target.files?.[0] ?? null)}
-              style={{ display: "block" }}
-            />
+            <input type="file" accept="image/*" onChange={(e) => setFoto(e.target.files?.[0] ?? null)} />
           </label>
           <button type="submit" disabled={submitting}>
             {submitting ? "Guardando..." : "Registrar"}
           </button>
         </form>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-text">{error}</p>}
       </section>
 
       {chartData.length > 0 && (
-        <section>
+        <section className="card">
           <h2>Evolución de peso</h2>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="fecha" />
-              <YAxis domain={["auto", "auto"]} />
-              <Tooltip />
-              <Line type="monotone" dataKey="peso" stroke="#2563eb" strokeWidth={2} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2d" />
+              <XAxis dataKey="fecha" tick={{ fill: "#9a9a9e", fontSize: 12 }} stroke="#2a2a2d" />
+              <YAxis domain={["auto", "auto"]} tick={{ fill: "#9a9a9e", fontSize: 12 }} stroke="#2a2a2d" />
+              <Tooltip
+                contentStyle={{ background: "#19191b", border: "1px solid #2a2a2d", borderRadius: 8 }}
+                labelStyle={{ color: "#9a9a9e" }}
+              />
+              <Line type="monotone" dataKey="peso" stroke="#ff7a1a" strokeWidth={2} dot={{ fill: "#ff7a1a" }} />
             </LineChart>
           </ResponsiveContainer>
         </section>
       )}
 
-      <section>
+      <section className="card">
         <h2>Historial</h2>
-        <ul>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {logs
             .slice()
             .reverse()
             .map((l) => (
-              <li key={l.id} style={{ marginBottom: "0.5rem" }}>
-                {new Date(l.fecha).toLocaleDateString()} —{" "}
-                {l.peso !== null && `${l.peso}kg `}
-                {l.marcaPersonal && `· ${l.marcaPersonal} `}
+              <li key={l.id} style={{ marginBottom: "0.6rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <span style={{ color: "var(--text-muted)" }}>{new Date(l.fecha).toLocaleDateString()}</span>
+                {l.peso !== null && <span>{l.peso}kg</span>}
+                {l.marcaPersonal && <span>· {l.marcaPersonal}</span>}
                 {l.fotoUrl && (
                   <img
                     src={resolveUploadUrl(l.fotoUrl)}
                     alt="Foto de progreso"
-                    style={{ height: 40, verticalAlign: "middle", marginLeft: "0.5rem" }}
+                    style={{ height: 40, borderRadius: 4 }}
                   />
                 )}
               </li>
@@ -165,22 +162,12 @@ export default function Progress() {
         </ul>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Insignias</h2>
         <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
           {achievements.map((a) => (
-            <div
-              key={a.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: 8,
-                padding: "1rem",
-                width: 160,
-                opacity: a.obtenido ? 1 : 0.4,
-                textAlign: "center",
-              }}
-            >
-              <div style={{ fontSize: "2rem" }}>{a.obtenido ? "🏅" : "🔒"}</div>
+            <div key={a.id} className="card achievement-card" style={{ width: 160, opacity: a.obtenido ? 1 : 0.4 }}>
+              <div className="icon">{a.obtenido ? "🏅" : "🔒"}</div>
               <strong>{a.nombre}</strong>
               <p style={{ fontSize: "0.8rem" }}>{a.descripcion}</p>
             </div>

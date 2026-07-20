@@ -27,35 +27,37 @@ export default function Login() {
   }
 
   return (
-    <main style={{ maxWidth: 360, margin: "4rem auto" }}>
-      <h1>Iniciar sesión</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Contraseña
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Ingresando..." : "Ingresar"}
-        </button>
-      </form>
-      <p>
-        ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
-      </p>
+    <main className="auth-page">
+      <div className="auth-card">
+        <div className="logo-badge lg">
+          <img src="/logo-gymbros.jpg" alt="GYMBROS" />
+        </div>
+        <div className="card">
+          <h1>Iniciar sesión</h1>
+          <form onSubmit={handleSubmit} className="form">
+            <label>
+              Email
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            </label>
+            <label>
+              Contraseña
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </label>
+            {error && <p className="error-text">{error}</p>}
+            <button type="submit" disabled={submitting}>
+              {submitting ? "Ingresando..." : "Ingresar"}
+            </button>
+          </form>
+          <p>
+            ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
+          </p>
+        </div>
+      </div>
     </main>
   );
 }

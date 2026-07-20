@@ -2,8 +2,8 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const navLinkStyle = ({ isActive }: { isActive: boolean }) => ({
-  fontWeight: isActive ? "bold" : "normal",
-  textDecoration: "none",
+  color: isActive ? "var(--primary)" : undefined,
+  background: isActive ? "rgba(255, 122, 26, 0.12)" : undefined,
 });
 
 export default function AdminLayout() {
@@ -12,23 +12,30 @@ export default function AdminLayout() {
   return (
     <div>
       <header className="app-header">
-        <nav>
-          <NavLink to="/admin" end style={navLinkStyle}>
-            Dashboard
-          </NavLink>
-          <NavLink to="/admin/usuarios" style={navLinkStyle}>
-            Usuarios
-          </NavLink>
-          <NavLink to="/admin/contenido" style={navLinkStyle}>
-            Contenido
-          </NavLink>
-          <NavLink to="/admin/rutinas" style={navLinkStyle}>
-            Rutinas
-          </NavLink>
-        </nav>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div className="brand-row">
+          <div className="logo-badge sm">
+            <img src="/logo-gymbros.jpg" alt="GYMBROS" />
+          </div>
+          <nav>
+            <NavLink to="/admin" end style={navLinkStyle}>
+              Dashboard
+            </NavLink>
+            <NavLink to="/admin/usuarios" style={navLinkStyle}>
+              Usuarios
+            </NavLink>
+            <NavLink to="/admin/contenido" style={navLinkStyle}>
+              Contenido
+            </NavLink>
+            <NavLink to="/admin/rutinas" style={navLinkStyle}>
+              Rutinas
+            </NavLink>
+          </nav>
+        </div>
+        <div className="user-box">
           <span>{user?.nombre}</span>
-          <button onClick={logout}>Cerrar sesión</button>
+          <button className="secondary" onClick={logout}>
+            Cerrar sesión
+          </button>
         </div>
       </header>
       <main className="app-main">

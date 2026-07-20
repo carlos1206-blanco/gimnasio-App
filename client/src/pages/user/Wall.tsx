@@ -18,16 +18,20 @@ export default function Wall() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxWidth: 560 }}>
+    <div className="stack" style={{ gap: "1rem", maxWidth: 560 }}>
       {posts.map((p) => (
-        <article key={p.id} style={{ border: "1px solid #ddd", borderRadius: 8, padding: "1rem" }}>
-          <span style={{ fontSize: "0.75rem", opacity: 0.7 }}>{p.tipo}</span>
-          <h3 style={{ margin: "0.25rem 0" }}>{p.titulo}</h3>
+        <article key={p.id} className="card post-card">
+          <span className="badge badge-primary">{p.tipo}</span>
+          <h3 style={{ margin: "0.5rem 0 0.25rem" }}>{p.titulo}</h3>
           {p.imagenUrl && (
-            <img src={p.imagenUrl} alt={p.titulo} style={{ maxWidth: "100%", borderRadius: 6 }} />
+            <img
+              src={p.imagenUrl}
+              alt={p.titulo}
+              style={{ maxWidth: "100%", borderRadius: 6, margin: "0.5rem 0" }}
+            />
           )}
           <p>{p.contenido}</p>
-          <small>
+          <small style={{ color: "var(--text-muted)" }}>
             {p.autor.nombre} {p.autor.apellido} — {new Date(p.fechaPublicacion).toLocaleString()}
           </small>
         </article>

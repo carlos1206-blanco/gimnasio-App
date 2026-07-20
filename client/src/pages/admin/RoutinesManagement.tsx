@@ -129,11 +129,11 @@ export default function RoutinesManagement() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem", maxWidth: 720 }}>
+    <div className="stack" style={{ maxWidth: 720 }}>
       <h1>Rutinas</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-text">{error}</p>}
 
-      <section>
+      <section className="card">
         <h2>Catálogo de ejercicios</h2>
         <ul>
           {exercises.map((e) => (
@@ -142,7 +142,7 @@ export default function RoutinesManagement() {
             </li>
           ))}
         </ul>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="form-row">
           <input
             placeholder="Nombre del ejercicio"
             value={newExercise.nombre}
@@ -153,13 +153,15 @@ export default function RoutinesManagement() {
             value={newExercise.grupoMuscular}
             onChange={(e) => setNewExercise((f) => ({ ...f, grupoMuscular: e.target.value }))}
           />
-          <button onClick={handleAddExercise}>Agregar ejercicio</button>
+          <button className="secondary" onClick={handleAddExercise}>
+            Agregar ejercicio
+          </button>
         </div>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Crear rutina</h2>
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.75rem" }}>
+        <div className="form-row" style={{ marginBottom: "0.75rem" }}>
           <input
             placeholder="Nombre de la rutina"
             value={routineForm.nombre}
@@ -172,7 +174,7 @@ export default function RoutinesManagement() {
           />
         </div>
 
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+        <div className="form-row">
           <select value={pickExerciseId} onChange={(e) => setPickExerciseId(e.target.value)}>
             <option value="">Elegir ejercicio...</option>
             {exercises.map((e) => (
@@ -181,27 +183,29 @@ export default function RoutinesManagement() {
               </option>
             ))}
           </select>
-          <label>
+          <label style={{ margin: 0 }}>
             Series
             <input
               type="number"
               min={1}
               value={pickSeries}
               onChange={(e) => setPickSeries(Number(e.target.value))}
-              style={{ width: "3.5rem", marginLeft: "0.25rem" }}
+              style={{ width: "4rem" }}
             />
           </label>
-          <label>
+          <label style={{ margin: 0 }}>
             Reps
             <input
               type="number"
               min={1}
               value={pickReps}
               onChange={(e) => setPickReps(Number(e.target.value))}
-              style={{ width: "3.5rem", marginLeft: "0.25rem" }}
+              style={{ width: "4rem" }}
             />
           </label>
-          <button onClick={addExerciseToRoutine}>Añadir a la rutina</button>
+          <button className="secondary" onClick={addExerciseToRoutine}>
+            Añadir a la rutina
+          </button>
         </div>
 
         <ul>
@@ -210,7 +214,9 @@ export default function RoutinesManagement() {
             return (
               <li key={re.exerciseId}>
                 {ex?.nombre} — {re.series}x{re.repeticiones}{" "}
-                <button onClick={() => removeExerciseFromRoutine(re.exerciseId)}>Quitar</button>
+                <button className="secondary" onClick={() => removeExerciseFromRoutine(re.exerciseId)}>
+                  Quitar
+                </button>
               </li>
             );
           })}
@@ -219,9 +225,9 @@ export default function RoutinesManagement() {
         <button onClick={handleCreateRoutine}>Guardar rutina</button>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Asignar rutina a un socio</h2>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div className="form-row">
           <select value={assignRoutineId} onChange={(e) => setAssignRoutineId(e.target.value)}>
             <option value="">Elegir rutina...</option>
             {routines.map((r) => (
@@ -242,7 +248,7 @@ export default function RoutinesManagement() {
         </div>
       </section>
 
-      <section>
+      <section className="card">
         <h2>Ver progreso de un socio</h2>
         <select value={progressUserId} onChange={(e) => loadProgress(e.target.value)}>
           <option value="">Elegir socio...</option>
@@ -260,8 +266,11 @@ export default function RoutinesManagement() {
               {a.routine.ejercicios.map((re) => {
                 const log = a.sessionLogs.find((l) => l.exerciseId === re.exerciseId);
                 return (
-                  <li key={re.id}>
-                    {re.exercise.nombre} — {log?.completado ? "✅ completado" : "⬜ pendiente"}
+                  <li key={re.id} style={{ margin: "0.3rem 0" }}>
+                    {re.exercise.nombre}{" "}
+                    <span className={`badge ${log?.completado ? "badge-success" : "badge-muted"}`}>
+                      {log?.completado ? "Completado" : "Pendiente"}
+                    </span>
                   </li>
                 );
               })}

@@ -31,33 +31,37 @@ export default function MyRoutines() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: 560 }}>
+    <div className="stack" style={{ gap: "1.5rem", maxWidth: 560 }}>
       <h1>Mis rutinas</h1>
       {assignments.map((a) => {
+        const total = a.routine.ejercicios.length;
         const completados = a.routine.ejercicios.filter(
           (re) => a.sessionLogs.find((l) => l.exerciseId === re.exerciseId)?.completado,
         ).length;
 
         return (
-          <article key={a.id} style={{ border: "1px solid #ddd", borderRadius: 8, padding: "1rem" }}>
+          <article key={a.id} className="card">
             <h3>
               {a.routine.nombre} {a.routine.nivel ? `(${a.routine.nivel})` : ""}
             </h3>
             <p>
-              {completados} de {a.routine.ejercicios.length} ejercicios completados
+              {completados} de {total} ejercicios completados
             </p>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <div className="progress-bar">
+              <div style={{ width: `${total > 0 ? (completados / total) * 100 : 0}%` }} />
+            </div>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {a.routine.ejercicios.map((re) => {
                 const log = a.sessionLogs.find((l) => l.exerciseId === re.exerciseId);
                 const completado = log?.completado ?? false;
                 return (
-                  <li key={re.id} style={{ padding: "0.25rem 0" }}>
-                    <label>
+                  <li key={re.id} style={{ padding: "0.3rem 0" }}>
+                    <label className="checkbox-row">
                       <input
                         type="checkbox"
                         checked={completado}
                         onChange={() => toggleCompletado(a, re.exerciseId, completado)}
-                      />{" "}
+                      />
                       {re.exercise.nombre} — {re.series}x{re.repeticiones}
                     </label>
                   </li>

@@ -46,78 +46,102 @@ export default function UsersManagement() {
   }
 
   if (loading) return <p>Cargando socios...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (error) return <p className="error-text">{error}</p>;
 
   return (
     <div>
       <h1>Gestión de socios</h1>
-      <div className="table-scroll">
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Teléfono</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((u) => (
-            <tr key={u.id} style={{ borderBottom: "1px solid #eee" }}>
-              {editingId === u.id ? (
-                <>
-                  <td>
-                    <input
-                      value={editForm.nombre}
-                      onChange={(e) => setEditForm((f) => ({ ...f, nombre: e.target.value }))}
-                      style={{ width: "5rem" }}
-                    />
-                    <input
-                      value={editForm.apellido}
-                      onChange={(e) => setEditForm((f) => ({ ...f, apellido: e.target.value }))}
-                      style={{ width: "5rem", marginLeft: "0.25rem" }}
-                    />
-                  </td>
-                  <td>{u.email}</td>
-                  <td>
-                    <input
-                      value={editForm.telefono}
-                      onChange={(e) => setEditForm((f) => ({ ...f, telefono: e.target.value }))}
-                      style={{ width: "6rem" }}
-                    />
-                  </td>
-                  <td>{u.role}</td>
-                  <td>{u.activo ? "Activo" : "Inactivo"}</td>
-                  <td>
-                    <button onClick={() => saveEdit(u.id)}>Guardar</button>
-                    <button onClick={cancelEdit} style={{ marginLeft: "0.5rem" }}>
-                      Cancelar
-                    </button>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td>
-                    {u.nombre} {u.apellido}
-                  </td>
-                  <td>{u.email}</td>
-                  <td>{u.telefono ?? "—"}</td>
-                  <td>{u.role}</td>
-                  <td>{u.activo ? "Activo" : "Inactivo"}</td>
-                  <td>
-                    <button onClick={() => startEdit(u)}>Editar</button>
-                    <button onClick={() => toggleActivo(u)} style={{ marginLeft: "0.5rem" }}>
-                      {u.activo ? "Desactivar" : "Activar"}
-                    </button>
-                  </td>
-                </>
-              )}
+      <div className="card table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((u) => (
+              <tr key={u.id}>
+                {editingId === u.id ? (
+                  <>
+                    <td>
+                      <div style={{ display: "flex", gap: "0.25rem" }}>
+                        <input
+                          value={editForm.nombre}
+                          onChange={(e) => setEditForm((f) => ({ ...f, nombre: e.target.value }))}
+                        />
+                        <input
+                          value={editForm.apellido}
+                          onChange={(e) => setEditForm((f) => ({ ...f, apellido: e.target.value }))}
+                        />
+                      </div>
+                    </td>
+                    <td>{u.email}</td>
+                    <td>
+                      <input
+                        value={editForm.telefono}
+                        onChange={(e) => setEditForm((f) => ({ ...f, telefono: e.target.value }))}
+                      />
+                    </td>
+                    <td>
+                      <span className={`badge ${u.role === "ADMIN" ? "badge-primary" : "badge-muted"}`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge ${u.activo ? "badge-success" : "badge-danger"}`}>
+                        {u.activo ? "Activo" : "Inactivo"}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button onClick={() => saveEdit(u.id)}>Guardar</button>
+                        <button className="secondary" onClick={cancelEdit}>
+                          Cancelar
+                        </button>
+                      </div>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>
+                      {u.nombre} {u.apellido}
+                    </td>
+                    <td>{u.email}</td>
+                    <td>{u.telefono ?? "—"}</td>
+                    <td>
+                      <span className={`badge ${u.role === "ADMIN" ? "badge-primary" : "badge-muted"}`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`badge ${u.activo ? "badge-success" : "badge-danger"}`}>
+                        {u.activo ? "Activo" : "Inactivo"}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                        <button className="secondary" onClick={() => startEdit(u)}>
+                          Editar
+                        </button>
+                        <button
+                          className={u.activo ? "danger" : ""}
+                          onClick={() => toggleActivo(u)}
+                        >
+                          {u.activo ? "Desactivar" : "Activar"}
+                        </button>
+                      </div>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
