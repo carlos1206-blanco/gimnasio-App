@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  nombre       String
+  apellido     String
+  telefono     String?
+  role         Role     @default(USER)
+  activo       Boolean  @default(true)
+  avatarUrl    String?
+  fechaRegistro DateTime @default(now())
+
+  posts Post[]
+
+  ejerciciosCreados Exercise[]
+  rutinasCreadas    Routine[]
+  asignaciones      RoutineAssignment[] @relation("AsignacionesDelSocio")
+  asignacionesHechas RoutineAssignment[] @relation("AsignacionesHechasPorAdmin")
+
+  progressLogs      ProgressLog[]
+  userAchievements  UserAchievement[]
+}
+
+enum PostType {
+  AVISO
+  NOTICIA
+  HISTORIA
+}
+
+model Post {
+  id               String    @id @default(cuid())
+  autorId          String
+  autor            User      @relation(fields: [autorId], references: [id])
+  tipo             PostType  @default(AVISO)
+  titulo           String
+  contenido        String
+  imagenUrl        String?
+  fechaPublicacion DateTime  @default(now())
+  expiraEn         DateTime?
+  publicado        Boolean   @default(true)
+}
+
+model Exercise {
+  id             String   @id @default(cuid())
+  nombre         String
+  descripcion    String?
+  grupoMuscular  String?
+  creadoPorId    String
+  creadoPor      User     @relation(fields: [creadoPorId], references: [id])
+
+  enRutinas    RoutineExercise[]
+  sessionLogs  SessionLog[]
+}
+
+model Routine {
+  id            String   @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  nivel         String?
+  creadoPorId   String
+  creadoPor     User     @relation(fields: [creadoPorId], references: [id])
+  fechaCreacion DateTime @default(now())
+
+  ejercicios   RoutineExercise[]
+  asignaciones RoutineAssignment[]
+}
+
+model RoutineExercise {
+  id               String  @id @default(cuid())
+  routineId        String
+  routine          Routine  @relation(fields: [routineId], references: [id])
+  exerciseId       String
+  exercise         Exercise @relation(fields: [exerciseId], references: [id])
+  series           Int
+  repeticiones     Int
+  descansoSegundos Int?
+  orden            Int      @default(0)
+}
+
+model RoutineAssignment {
+  id            String    @id @default(cuid())
+  routineId     String
+  routine       Routine   @relation(fields: [routineId], references: [id])
+  userId        String
+  user          User      @relation("AsignacionesDelSocio", fields: [userId], references: [id])
+  asignadoPorId String
+  asignadoPor   User      @relation("AsignacionesHechasPorAdmin", fields: [asignadoPorId], references: [id])
+  fechaInicio   DateTime  @default(now())
+  fechaFin      DateTime?
+  activa        Boolean   @default(true)
+
+  sessionLogs SessionLog[]
+}
+
+model SessionLog {
+  id                     String            @id @default(cuid())
+  routineAssignmentId    String
+  routineAssignment      RoutineAssignment @relation(fields: [routineAssignmentId], references: [id])
+  exerciseId             String
+  exercise               Exercise          @relation(fields: [exerciseId], references: [id])
+  completado             Boolean           @default(false)
+  seriesRealizadas       Int?
+  repeticionesRealizadas Int?
+  pesoUsado              Float?
+  notas                  String?
+  actualizadoEn          DateTime          @updatedAt
+
+  @@unique([routineAssignmentId, exerciseId])
+}
+
+model ProgressLog {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  fecha          DateTime @default(now())
+  peso           Float?
+  medidas        Json?
+  marcaPersonal  String?
+  fotoUrl        String?
+}
+
+enum AchievementCriterio {
+  EJERCICIOS_COMPLETADOS
+  REGISTROS_PROGRESO
+}
+
+model Achievement {
+  id            String              @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  iconoUrl      String?
+  criterio      AchievementCriterio
+  valorObjetivo Int
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  fechaObtenido DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+}
