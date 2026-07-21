@@ -40,7 +40,7 @@ export default function Register() {
     <main className="auth-page">
       <div className="auth-card">
         <div className="logo-badge lg">
-          <img src="/logo-gymbros.jpg" alt="GYMBROS" />
+          <img src="/logo-gymbros.png" alt="GYMBROS" />
         </div>
         <div className="card">
           <h1>Crear cuenta</h1>

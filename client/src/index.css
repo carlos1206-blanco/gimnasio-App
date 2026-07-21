@@ -181,13 +181,13 @@ button.danger {
 }
 
 .logo-badge.sm {
-  width: 42px;
-  height: 42px;
+  width: 56px;
+  height: 56px;
 }
 
 .logo-badge.lg {
-  width: 96px;
-  height: 96px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto 1rem;
 }
 

@@ -14,7 +14,7 @@ export default function AdminLayout() {
       <header className="app-header">
         <div className="brand-row">
           <div className="logo-badge sm">
-            <img src="/logo-gymbros.jpg" alt="GYMBROS" />
+            <img src="/logo-gymbros.png" alt="GYMBROS" />
           </div>
           <nav>
             <NavLink to="/admin" end style={navLinkStyle}>
