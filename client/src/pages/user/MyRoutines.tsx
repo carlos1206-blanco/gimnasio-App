@@ -4,6 +4,7 @@ import { listMyAssignmentsRequest, updateSessionLogRequest, type RoutineAssignme
 export default function MyRoutines() {
   const [assignments, setAssignments] = useState<RoutineAssignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     listMyAssignmentsRequest()
@@ -22,6 +23,15 @@ export default function MyRoutines() {
         return { ...a, sessionLogs: [...otros, updatedLog] };
       }),
     );
+  }
+
+  function toggleExpanded(routineExerciseId: string) {
+    setExpandedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(routineExerciseId)) next.delete(routineExerciseId);
+      else next.add(routineExerciseId);
+      return next;
+    });
   }
 
   if (loading) return <p>Cargando tus rutinas...</p>;
@@ -54,16 +64,27 @@ export default function MyRoutines() {
               {a.routine.ejercicios.map((re) => {
                 const log = a.sessionLogs.find((l) => l.exerciseId === re.exerciseId);
                 const completado = log?.completado ?? false;
+                const expandido = expandedIds.has(re.id);
                 return (
-                  <li key={re.id} style={{ padding: "0.3rem 0" }}>
-                    <label className="checkbox-row">
-                      <input
-                        type="checkbox"
-                        checked={completado}
-                        onChange={() => toggleCompletado(a, re.exerciseId, completado)}
-                      />
-                      {re.exercise.nombre} — {re.series}x{re.repeticiones}
-                    </label>
+                  <li key={re.id} style={{ padding: "0.3rem 0", borderTop: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.5rem" }}>
+                      <label className="checkbox-row">
+                        <input
+                          type="checkbox"
+                          checked={completado}
+                          onChange={() => toggleCompletado(a, re.exerciseId, completado)}
+                        />
+                        {re.exercise.nombre} — {re.series}x{re.repeticiones}
+                      </label>
+                      {re.exercise.descripcion && (
+                        <button className="secondary" onClick={() => toggleExpanded(re.id)}>
+                          {expandido ? "Ocultar" : "Cómo hacerlo"}
+                        </button>
+                      )}
+                    </div>
+                    {expandido && re.exercise.descripcion && (
+                      <p style={{ margin: "0.4rem 0 0.6rem", fontSize: "0.9rem" }}>{re.exercise.descripcion}</p>
+                    )}
                   </li>
                 );
               })}

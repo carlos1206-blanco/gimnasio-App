@@ -20,7 +20,7 @@ export default function RoutinesManagement() {
   const [socios, setSocios] = useState<ManagedUser[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const [newExercise, setNewExercise] = useState({ nombre: "", grupoMuscular: "" });
+  const [newExercise, setNewExercise] = useState({ nombre: "", grupoMuscular: "", descripcion: "" });
 
   const [routineForm, setRoutineForm] = useState({ nombre: "", nivel: "" });
   const [routineExercises, setRoutineExercises] = useState<NewRoutineExercise[]>([]);
@@ -55,8 +55,9 @@ export default function RoutinesManagement() {
       await createExerciseRequest({
         nombre: newExercise.nombre,
         grupoMuscular: newExercise.grupoMuscular || undefined,
+        descripcion: newExercise.descripcion || undefined,
       });
-      setNewExercise({ nombre: "", grupoMuscular: "" });
+      setNewExercise({ nombre: "", grupoMuscular: "", descripcion: "" });
       const ex = await listExercisesRequest();
       setExercises(ex);
     } catch (err) {
@@ -135,25 +136,39 @@ export default function RoutinesManagement() {
 
       <section className="card">
         <h2>Catálogo de ejercicios</h2>
-        <ul>
+        <ul style={{ paddingLeft: "1.1rem" }}>
           {exercises.map((e) => (
-            <li key={e.id}>
-              {e.nombre} {e.grupoMuscular ? `(${e.grupoMuscular})` : ""}
+            <li key={e.id} style={{ marginBottom: "0.4rem" }}>
+              <strong>{e.nombre}</strong> {e.grupoMuscular ? `(${e.grupoMuscular})` : ""}
+              {e.descripcion && (
+                <div style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>{e.descripcion}</div>
+              )}
             </li>
           ))}
         </ul>
-        <div className="form-row">
-          <input
-            placeholder="Nombre del ejercicio"
-            value={newExercise.nombre}
-            onChange={(e) => setNewExercise((f) => ({ ...f, nombre: e.target.value }))}
-          />
-          <input
-            placeholder="Grupo muscular (opcional)"
-            value={newExercise.grupoMuscular}
-            onChange={(e) => setNewExercise((f) => ({ ...f, grupoMuscular: e.target.value }))}
-          />
-          <button className="secondary" onClick={handleAddExercise}>
+        <div className="form" style={{ maxWidth: 480 }}>
+          <div className="form-row">
+            <input
+              placeholder="Nombre del ejercicio"
+              value={newExercise.nombre}
+              onChange={(e) => setNewExercise((f) => ({ ...f, nombre: e.target.value }))}
+            />
+            <input
+              placeholder="Grupo muscular (opcional)"
+              value={newExercise.grupoMuscular}
+              onChange={(e) => setNewExercise((f) => ({ ...f, grupoMuscular: e.target.value }))}
+            />
+          </div>
+          <label style={{ margin: 0 }}>
+            Instrucciones de uso (opcional)
+            <textarea
+              placeholder="Ej: cómo usar esta máquina, postura, técnica..."
+              rows={3}
+              value={newExercise.descripcion}
+              onChange={(e) => setNewExercise((f) => ({ ...f, descripcion: e.target.value }))}
+            />
+          </label>
+          <button className="secondary" onClick={handleAddExercise} style={{ alignSelf: "flex-start" }}>
             Agregar ejercicio
           </button>
         </div>
