@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { createProgressLogRequest, listMyProgressLogsRequest, type ProgressLog } from "../../api/progress";
 import { listMyAchievementsRequest, type AchievementConProgreso } from "../../api/achievements";
 import { resolveUploadUrl, getErrorMessage } from "../../api/client";
+import WaterTracker from "./WaterTracker";
 
 export default function Progress() {
   const [logs, setLogs] = useState<ProgressLog[]>([]);
@@ -61,6 +62,8 @@ export default function Progress() {
   return (
     <div className="stack" style={{ maxWidth: 640 }}>
       <h1>Mis logros y progreso</h1>
+
+      <WaterTracker />
 
       <section className="card">
         <h2>Registrar progreso</h2>

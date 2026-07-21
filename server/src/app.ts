@@ -10,6 +10,7 @@ import routineRoutes from "./routes/routineRoutes";
 import routineAssignmentRoutes from "./routes/routineAssignmentRoutes";
 import progressRoutes from "./routes/progressRoutes";
 import achievementRoutes from "./routes/achievementRoutes";
+import waterRoutes from "./routes/waterRoutes";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -33,6 +34,7 @@ app.use("/api/routines", routineRoutes);
 app.use("/api/routine-assignments", routineAssignmentRoutes);
 app.use("/api/progress-logs", progressRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/water-logs", waterRoutes);
 
 app.use("/api", notFoundHandler);
 app.use(errorHandler);

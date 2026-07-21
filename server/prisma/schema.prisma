@@ -38,6 +38,7 @@ model User {
 
   progressLogs      ProgressLog[]
   userAchievements  UserAchievement[]
+  waterLogs         WaterLog[]
 }
 
 enum PostType {
@@ -163,4 +164,12 @@ model UserAchievement {
   fechaObtenido DateTime    @default(now())
 
   @@unique([userId, achievementId])
+}
+
+model WaterLog {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  fecha      DateTime @default(now())
+  cantidadMl Int
 }
